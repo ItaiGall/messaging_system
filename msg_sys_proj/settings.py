@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 #SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('DEBUG_VALUE'))
+DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
 #DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://msg-sys-ig.herokuapp.com']
