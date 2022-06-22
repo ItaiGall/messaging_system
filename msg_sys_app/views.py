@@ -53,11 +53,9 @@ class MessageViewSet(viewsets.ModelViewSet):
                 messages = Message.objects.filter(recipient=current_user, msg_read=False)
 
             serializer = MessageSerializer(messages, many=True)
-            return Response("Message list",
-                            serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except:
-            return Response("No messages yet",
-                            status=status.HTTP_204_NO_CONTENT)
+            return Response("No messages yet", status=status.HTTP_204_NO_CONTENT)
 
     #"Write message"
     #URL: api/create/
@@ -85,8 +83,7 @@ class MessageViewSet(viewsets.ModelViewSet):
                 message.msg_read = True
                 message.save()
             serializer = MessageSerializer(message)
-            return Response(f"Message with ID {msg_id} has been retrieved",
-                            serializer.data, status=status.HTTP_302_FOUND)
+            return Response(serializer.data, status=status.HTTP_302_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     #"Delete message as recipient or as owner"
