@@ -1,0 +1,22 @@
+{
+  "name": "msg_sys_proj",
+  "version": "1.0.0",
+  "description": "package.json of Messaging System",
+
+  "scripts": {
+    "test": "unittest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItaiGall/messaging_system"
+  },
+  "keywords": [
+   "messages"
+  ],
+  "author": "Itai G.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ItaiGall/messaging_system/issues"
+  },
+  "homepage": "https://github.com/ItaiGall/messaging_system#readme"
+}
