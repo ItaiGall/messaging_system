@@ -3,6 +3,7 @@ from rest_framework.filters import BaseFilterBackend
 from rest_framework.response import Response
 from rest_framework.schemas import coreapi
 from .models import Message
+from django.contrib.auth.models import User
 from .serializers import MessageSerializer
 from.slug_generator import generate_slug
 from django.shortcuts import get_object_or_404
@@ -52,18 +53,24 @@ class MessageViewSet(viewsets.ModelViewSet):
                 messages = Message.objects.filter(recipient=current_user, msg_read=False)
 
             serializer = MessageSerializer(messages, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response("Message list",
+                            serializer.data, status=status.HTTP_200_OK)
         except:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response("No messages yet",
+                            status=status.HTTP_204_NO_CONTENT)
 
     #"Write message"
     #URL: api/create/
     def create(self, request, *args, **kwargs):
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
-            slug = generate_slug()
-            serializer.save(slug=slug, date_created=datetime.now(), owner=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            #send message only if the recipient actually exists in DB
+            temp_recipient = serializer.validated_data['recipient']
+            if User.objects.filter(username=temp_recipient).exists():
+                slug = generate_slug()
+                serializer.save(slug=slug, date_created=datetime.now(), owner=request.user)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(f"Recipient not found",status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     # "Read single message"
@@ -78,7 +85,8 @@ class MessageViewSet(viewsets.ModelViewSet):
                 message.msg_read = True
                 message.save()
             serializer = MessageSerializer(message)
-            return Response(serializer.data, status=status.HTTP_302_FOUND)
+            return Response(f"Message with ID {msg_id} has been retrieved",
+                            serializer.data, status=status.HTTP_302_FOUND)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     #"Delete message as recipient or as owner"
@@ -89,5 +97,6 @@ class MessageViewSet(viewsets.ModelViewSet):
         #before acting, test if the message belongs to current user as recipient or as owner
         if message.recipient == current_user or message.owner == current_user:
             message.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(f"Message with ID {msg_id} has been deleted",
+                            status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)

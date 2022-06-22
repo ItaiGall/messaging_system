@@ -70,7 +70,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         current_user = get_object_or_404(User, id=request.user.pk)
         serializer = UserSerializer(current_user)
-        return Response(serializer.data, status=status.HTTP_302_FOUND)
+        return Response("Current user profile", serializer.data, status=status.HTTP_302_FOUND)
 
     #sign up as new user
     def create(self, request, *args, **kwargs):
