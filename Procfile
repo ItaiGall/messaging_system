@@ -1,1 +1,1 @@
-web: gunicorn GoldfishMemory_Project.wsgi
+web: gunicorn msg_sys_proj.wsgi
