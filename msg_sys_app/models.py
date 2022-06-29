@@ -12,6 +12,7 @@ class Message(models.Model):
     subject = models.CharField(max_length=40, null=True, blank=False)
     message = models.TextField(blank=False, null=True)
     #datetime won't be editable
+    #should add: auto_now=True instead in views
     date_created = models.DateTimeField(editable=False, blank=False, null=False)
     #A boolean field to indicate whether the message has been read at least once:
     msg_read = models.BooleanField(editable=False, default=False, blank=False)
